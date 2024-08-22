@@ -37,6 +37,10 @@ For detailed instructions on how to run the application locally, refer to the [I
 
 For detailed info check out the collection on [Postman](https://www.postman.com/sam-wiz/workspace/gokapture-assignment/collection/34260692-af28a54e-e809-46a0-ac6d-aceb32fa6496?action=share&creator=34260692)
 
+## Aproach Doc
+
+Check out the [Approach](Approach.md) doc
+
 ## Contributing
 
 If you would like to contribute to this project, please follow the standard Git workflow:
