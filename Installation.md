@@ -78,14 +78,14 @@
 1. **Clone the Repository**
 
    ```bash
-   git clone <repository-url>
-   cd <project-directory>
+   git clone https://github.com/Sam-wiz/task-management-system-backend/
+   cd task-management-system-backend/
    ```
 
 2. **Build the Docker Image**
 
    ```bash
-   docker build -t my-app .
+   docker-compose up --build 
    ```
 
 3. **Create a `.env` File**
