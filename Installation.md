@@ -25,9 +25,10 @@
    Create a `.env` file in the root of the project directory and add the following environment variables:
 
    ```env
-   DATABASE_URL=your_database_url
+   DATABASE_URL=your_any_postgres_database_connection_string_url
    JWT_SECRET=your_jwt_secret
    ```
+   {For connection string url you can use any online RDMS platforms. I have personally used supabase, you can use heroku, elephant, etc...}   
 
 4. **Run Database Migrations**
 
