@@ -8,30 +8,36 @@ const createTask = async (title, description, status, priority, due_date, user_i
   return result.rows[0];
 };
 
-
-const getTasks = async (user_id, filters = {}, search = '', page = 1, limit = 10) => {
+const getTasks = async (user, filters = {}, search = '', page = 1, limit = 10) => {
   const offset = (page - 1) * limit;
   const { status, priority, due_date } = filters;
-  let query = `SELECT * FROM tasks WHERE user_id = $1`;
-  let queryParams = [user_id];
+  let query = '';
+  let queryParams = [];
+
+  if (user.role === 'Admin') {
+    query = `SELECT * FROM tasks`;
+  } else {
+    query = `SELECT * FROM tasks WHERE user_id = $1`;
+    queryParams.push(user.userId);
+  }
 
   if (status) {
-    query += ` AND status = $${queryParams.length + 1}`;
+    query += query.includes('WHERE') ? ` AND status = $${queryParams.length + 1}` : ` WHERE status = $${queryParams.length + 1}`;
     queryParams.push(status);
   }
 
   if (priority) {
-    query += ` AND priority = $${queryParams.length + 1}`;
+    query += query.includes('WHERE') ? ` AND priority = $${queryParams.length + 1}` : ` WHERE priority = $${queryParams.length + 1}`;
     queryParams.push(priority);
   }
 
   if (due_date) {
-    query += ` AND due_date = $${queryParams.length + 1}`;
+    query += query.includes('WHERE') ? ` AND due_date = $${queryParams.length + 1}` : ` WHERE due_date = $${queryParams.length + 1}`;
     queryParams.push(due_date);
   }
 
   if (search) {
-    query += ` AND (title ILIKE $${queryParams.length + 1} OR description ILIKE $${queryParams.length + 1})`;
+    query += query.includes('WHERE') ? ` AND (title ILIKE $${queryParams.length + 1} OR description ILIKE $${queryParams.length + 1})` : ` WHERE (title ILIKE $${queryParams.length + 1} OR description ILIKE $${queryParams.length + 1})`;
     queryParams.push(`%${search}%`);
   }
 
@@ -54,9 +60,9 @@ const updateTask = async (taskId, title, description, status, priority) => {
 };
 
 
+
 const deleteTask = async (taskId) => {
   await pool.query('DELETE FROM tasks WHERE id = $1', [taskId]);
 };
-
 
 module.exports = { createTask, getTasks, updateTask, deleteTask };
