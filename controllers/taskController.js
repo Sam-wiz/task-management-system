@@ -23,12 +23,21 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const tasks = await getTasks(req.user.userId);
+    const filters = {
+      status: req.query.status,
+      priority: req.query.priority,
+      due_date: req.query.due_date
+    };
+    const search = req.query.search || '';
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const tasks = await getTasks(req.user.userId, filters, search, page, limit);
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
+
 
 const update = async (req, res) => {
   try {

@@ -9,13 +9,39 @@ const createTask = async (title, description, status, priority, due_date, user_i
 };
 
 
-const getTasks = async (user_id) => {
-  const result = await pool.query(
-    `SELECT * FROM tasks WHERE user_id = $1 ORDER BY due_date`,
-    [user_id]
-  );
+const getTasks = async (user_id, filters = {}, search = '', page = 1, limit = 10) => {
+  const offset = (page - 1) * limit;
+  const { status, priority, due_date } = filters;
+  let query = `SELECT * FROM tasks WHERE user_id = $1`;
+  let queryParams = [user_id];
+
+  if (status) {
+    query += ` AND status = $${queryParams.length + 1}`;
+    queryParams.push(status);
+  }
+
+  if (priority) {
+    query += ` AND priority = $${queryParams.length + 1}`;
+    queryParams.push(priority);
+  }
+
+  if (due_date) {
+    query += ` AND due_date = $${queryParams.length + 1}`;
+    queryParams.push(due_date);
+  }
+
+  if (search) {
+    query += ` AND (title ILIKE $${queryParams.length + 1} OR description ILIKE $${queryParams.length + 1})`;
+    queryParams.push(`%${search}%`);
+  }
+
+  query += ` ORDER BY due_date LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+  queryParams.push(limit, offset);
+
+  const result = await pool.query(query, queryParams);
   return result.rows;
 };
+
 
 
 const updateTask = async (taskId, title, description, status, priority) => {
@@ -31,5 +57,6 @@ const updateTask = async (taskId, title, description, status, priority) => {
 const deleteTask = async (taskId) => {
   await pool.query('DELETE FROM tasks WHERE id = $1', [taskId]);
 };
+
 
 module.exports = { createTask, getTasks, updateTask, deleteTask };
