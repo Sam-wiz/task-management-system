@@ -29,6 +29,7 @@
    JWT_SECRET=your_jwt_secret
    ```
    {For connection string url you can use any online RDMS platforms. I have personally used supabase, you can use heroku, elephant, etc...}   
+   {You can mail me for my connection_string}
 
 4. **Run Database Migrations**
 
