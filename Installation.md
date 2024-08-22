@@ -35,33 +35,33 @@
 
    ```sql
    CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  username VARCHAR(255) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-
-CREATE TYPE task_status AS ENUM ('Todo', 'In Progress', 'Done');
-CREATE TYPE task_priority AS ENUM ('high', 'medium', 'low');
-
-CREATE TABLE tasks (
-  id SERIAL PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
-  status task_status DEFAULT 'Todo',
-  priority task_priority DEFAULT 'medium',
-  due_date TIMESTAMPTZ,
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE TYPE user_role AS ENUM ('User', 'Admin');
-
-
-ALTER TABLE users
-ADD COLUMN role user_role DEFAULT 'User';
+     id SERIAL PRIMARY KEY,
+     username VARCHAR(255) NOT NULL UNIQUE,
+     password VARCHAR(255) NOT NULL,
+     created_at TIMESTAMPTZ DEFAULT NOW()
+   );
+   
+   
+   CREATE TYPE task_status AS ENUM ('Todo', 'In Progress', 'Done');
+   CREATE TYPE task_priority AS ENUM ('high', 'medium', 'low');
+   
+   CREATE TABLE tasks (
+     id SERIAL PRIMARY KEY,
+     title VARCHAR(255) NOT NULL,
+     description TEXT,
+     status task_status DEFAULT 'Todo',
+     priority task_priority DEFAULT 'medium',
+     due_date TIMESTAMPTZ,
+     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+     created_at TIMESTAMPTZ DEFAULT NOW(),
+     updated_at TIMESTAMPTZ DEFAULT NOW()
+   );
+   
+   CREATE TYPE user_role AS ENUM ('User', 'Admin');
+   
+   
+   ALTER TABLE users
+   ADD COLUMN role user_role DEFAULT 'User';
 
    ```
 
