@@ -1,116 +1,52 @@
-# Approach Documentation
+## Approach and Assumptions
 
-This document describes the approach for developing and implementing a task management application with role-based access control. The application supports user and admin roles, allowing for the creation, retrieval, update, and deletion of tasks. Admins have broader permissions compared to regular users.
+### Approach
 
-### Technologies
+1. **Role-Based Access Control (RBAC)**:
+   - The application implements role-based access control to differentiate permissions between `User` and `Admin`. 
+   - **Users** can only manage their own tasks, while **Admins** have permissions to manage all tasks across different users.
 
-- **Backend**: Node.js with Express.js
-- **Database**: PostgreSQL
-- **Authentication**: JSON Web Tokens (JWT)
-- **Password Hashing**: bcrypt
-- **Containerization**: Docker
+2. **Database Design**:
+   - Two primary tables are used: `users` and `tasks`.
+   - The `users` table stores user credentials and roles. The `tasks` table stores task details and associates each task with a user.
 
-### Database Schema
+3. **API Endpoints**:
+   - The API provides endpoints for user registration, authentication, and task management.
+   - **Users** can create, view, update, and delete their own tasks.
+   - **Admins** can perform these operations on any task and can also assign tasks to other users.
 
-**Users Table**:
-- `id`: Unique identifier for the user.
-- `username`: Unique username for login.
-- `password`: Hashed password.
-- `role`: User role (either `User` or `Admin`).
-- `created_at`: Timestamp of user creation.
+4. **Token-Based Authentication**:
+   - JWT (JSON Web Tokens) is used for user authentication and authorization.
+   - Tokens are passed in the `Authorization` header for accessing protected routes.
 
-**Tasks Table**:
-- `id`: Unique identifier for the task.
-- `title`: Title of the task.
-- `description`: Detailed description of the task.
-- `status`: Current status of the task (`Todo`, `In Progress`, `Done`).
-- `priority`: Priority level of the task (`high`, `medium`, `low`).
-- `due_date`: Due date of the task.
-- `user_id`: Foreign key linking to the user who owns the task.
-- `created_at`: Timestamp of task creation.
-- `updated_at`: Timestamp of last update.
+5. **Error Handling**:
+   - The application includes error handling for various scenarios, such as invalid input, unauthorized access, and server errors.
 
-### Endpoints
+6. **Pagination and Filtering**:
+   - The `GET /api/tasks` endpoint supports pagination and filtering by status, priority, due date, and search keywords.
 
-**User Endpoints**:
-1. **Register User**:
-   - Registers a new user with a given username, password, and role.
-2. **Login User**:
-   - Authenticates a user and provides a JWT token for subsequent requests.
+### Assumptions
 
-**Task Endpoints**:
-1. **Create Task**:
-   - Allows users to create tasks. Admins can assign tasks to any user; otherwise, tasks are assigned to the requesting user.
-2. **Get Tasks**:
-   - Retrieves tasks with optional filtering and search parameters. Admins can view all tasks, while regular users can only view their own tasks.
-3. **Update Task**:
-   - Updates an existing task. Admins can update any task, while regular users can only update their own tasks.
-4. **Delete Task**:
-   - Deletes a task. Admins can delete any task, while regular users can only delete their own tasks.
+1. **Database Setup**:
+   - It is assumed that PostgreSQL is used as the database system.
+   - The database schema includes ENUM types for task statuses and priorities, which are used to enforce valid values.
 
-### Authentication & Authorization
+2. **Environment Variables**:
+   - It is assumed that necessary environment variables like `DATABASE_URL` and `JWT_SECRET` are properly set in the environment or Docker configuration.
 
-- **Authentication**:
-  - Implemented using JWT. Tokens are issued upon successful login and must be included in the `Authorization` header for protected routes.
+3. **Authentication**:
+   - It is assumed that JWT tokens are issued with the necessary claims (such as `role` and `userId`) and that they are properly validated for each request.
 
-- **Authorization**:
-  - Role-based access control ensures that users can only perform actions permitted by their role.
-    - **Admin**: Can create, read, update, and delete any task, and assign tasks to any user.
-    - **User**: Can create, read, update, and delete only their own tasks.
+4. **Error Responses**:
+   - The API handles errors by providing appropriate HTTP status codes and error messages. It assumes that client applications can handle and interpret these responses.
 
-### Error Handling
+5. **Filtering and Search**:
+   - It is assumed that the query parameters used for filtering and searching tasks are in a format that can be processed by SQL queries.
 
-- **400 Bad Request**: Returned for invalid input or parameters.
-- **401 Unauthorized**: Returned for missing or invalid authentication tokens.
-- **403 Forbidden**: Returned for insufficient permissions.
-- **404 Not Found**: Returned when a resource does not exist.
-- **500 Internal Server Error**: Returned for server-side errors.
+6. **Data Integrity**:
+   - It is assumed that the application enforces data integrity, such as unique constraints on usernames and foreign key constraints between tasks and users.
 
-### Filtering and Searching
-
-- **Filters**:
-  - `status`: Filter tasks by their status (`Todo`, `In Progress`, `Done`).
-  - `priority`: Filter tasks by priority (`high`, `medium`, `low`).
-  - `due_date`: Filter tasks by due date (`YYYY-MM-DD`).
-
-- **Search**:
-  - `search`: Search tasks by title or description (case-insensitive).
-
-- **Pagination**:
-  - `page`: Page number for pagination (default is 1).
-  - `limit`: Number of tasks per page (default is 10).
-
-### Deployment
-
-**Local Deployment**:
-
-1. **Using npm**:
-   - Clone the repository.
-   - Install dependencies: `npm install`.
-   - Start the server: `npm start`.
-
-2. **Using Docker**:
-   - Build the Docker image: `docker build -t task-manager .`.
-   - Run the Docker container: `docker run -p 3000:3000 -e DATABASE_URL=<your-database-url> -e JWT_SECRET=<your-jwt-secret> task-manager`.
-
-**Docker Compose**:
-   - Build and run the application using Docker Compose: `docker-compose up`.
-
-### Development Workflow
-
-1. **Setup**:
-   - Set up the database schema.
-   - Configure environment variables for JWT secret and database URL.
-
-2. **Development**:
-   - Implement and test API endpoints.
-   - Use role-based access control to manage permissions.
-
-3. **Testing**:
-   - Write unit and integration tests.
-   - Ensure all endpoints adhere to the expected behavior.
-
-4. **Deployment**:
-   - Deploy using Docker or npm based on the environment.
+7. **Server Setup**:
+   - It is assumed that Node.js is used as the server runtime, and the application is capable of running either directly via `npm` or inside a Docker container.
 
 ---
