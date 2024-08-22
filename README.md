@@ -35,7 +35,7 @@ For detailed instructions on how to run the application locally, refer to the [I
 
 ## API Endpoint Doc
 
-For detailed info check out the collection on [Postman](https://www.postman.com/sam-wiz/workspace/gokapture-assignment/collection/34260692-af28a54e-e809-46a0-ac6d-aceb32fa6496?action=share&creator=34260692)
+For detailed info check out the collection on [Postman](https://www.postman.com/sam-wiz/workspace/gokapture/collection/34260692-aa450db0-3701-4d39-9e9d-7b620d11f5d3?action=share&creator=34260692)
 
 ## Aproach Doc
 
