@@ -10,8 +10,8 @@
 1. **Clone the Repository**
 
    ```bash
-   git clone <repository-url>
-   cd <project-directory>
+   git clone https://github.com/Sam-wiz/task-management-system-backend/
+   cd task-management-system-backend/
    ```
 
 2. **Install Dependencies**
